@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>SushiSnos 🍣</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Защита от копирования */
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle, #111, #000);
+    color: white;
+    overflow-x: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 🍣 маленькие суши */
+.sushi-bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.sushi-bg span {
+    position: absolute;
+    font-size: 20px;
+    opacity: 0.08;
+    animation: float linear infinite;
+}
+
+@keyframes float {
+    from { transform: translateY(100vh) rotate(0deg); }
+    to { transform: translateY(-10vh) rotate(360deg); }
+}
+
+/* меню - улучшено для мобильных */
+.menu {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    z-index: 10;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.menu button {
+    padding: 14px 20px;
+    border-radius: 40px;
+    border: none;
+    background: rgba(20, 20, 30, 0.8);
+    color: white;
+    cursor: pointer;
+    backdrop-filter: blur(15px);
+    font-size: 1.3rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+    min-width: 65px;
+    flex: 0 1 auto;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    -webkit-tap-highlight-color: rgba(255,0,100,0.3);
+}
+
+.menu button:active {
+    transform: scale(0.95);
+    background: rgba(255,0,100,0.7);
+}
+
+/* контейнер */
+.container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 120px 15px 40px;
+    position: relative;
+    z-index: 1;
+}
+
+/* карточка - улучшена для мобильных */
+.card {
+    background: rgba(25, 25, 35, 0.7);
+    backdrop-filter: blur(20px);
+    padding: 35px 25px;
+    border-radius: 45px;
+    text-align: center;
+    width: 500px;
+    max-width: 100%;
+    box-shadow: 0 20px 60px rgba(255,0,100,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: transform 0.2s ease;
+}
+
+/* суши */
+.sushi {
+    font-size: 90px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 10px 15px rgba(255,0,100,0.4));
+    animation: sushiFloat 3s ease-in-out infinite;
+}
+
+@keyframes sushiFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+h2 {
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #fff, #ffccdd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: rgba(255,255,255,0.95);
+}
+
+input, textarea {
+    width: 100%;
+    padding: 18px 22px;
+    border-radius: 30px;
+    border: 2px solid transparent;
+    margin: 10px 0;
+    text-align: center;
+    font-size: 1.1rem;
+    background: rgba(255,255,255,0.95);
+    transition: all 0.2s ease;
+    -webkit-appearance: none;
+    font-weight: 500;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #ff0055;
+    box-shadow: 0 0 0 3px rgba(255,0,85,0.3);
+    transform: scale(1.02);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn {
+    width: 100%;
+    padding: 18px 22px;
+    border-radius: 40px;
+    border: none;
+    background: linear-gradient(135deg, #ff0055, #ff5500);
+    color: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 12px 0;
+    transition: all 0.2s ease;
+    -webkit-appearance: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 25px rgba(255,0,100,0.3);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 5px 15px rgba(255,0,100,0.5);
+}
+
+.btn-small {
+    padding: 14px 18px;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(5px);
+    text-transform: none;
+    letter-spacing: 0.5px;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #00cc55, #0066ff);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffaa00, #ff5500);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ff3333, #990000);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    transform: none;
+    box-shadow: none;
+}
+
+p {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+#nameView, #usernameView, #bioView, #passwordStatus {
+    background: rgba(0,0,0,0.4);
+    padding: 15px;
+    border-radius: 25px;
+    margin: 12px 0;
+    font-size: 1.1rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+}
+
+.screen { display: none; }
+.active { display: block; }
+
+/* ПРОГРЕСС-БАР - УЛУЧШЕННЫЙ */
+.progress-container {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50px;
+    margin: 25px 0 15px;
+    overflow: hidden;
+    display: none;
+    border: 2px solid rgba(255,255,255,0.15);
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.progress-container.active {
+    display: block;
+    animation: progressGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes progressGlow {
+    0%, 100% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 15px rgba(255,0,100,0.3); }
+    50% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 30px rgba(255,0,100,0.7); }
+}
+
+.progress-bar {
+    height: 24px;
+    width: 0%;
+    background: linear-gradient(90deg, #ff0055, #ffaa00, #ff0055);
+    background-size: 200% 100%;
+    border-radius: 50px;
+    transition: width 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 0 20px #ff0055;
+    animation: gradientShift 2s linear infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+.progress-text {
+    font-size: 1.1rem;
+    color: white;
+    margin-bottom: 8px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.progress-percent {
+    background: rgba(255,0,100,0.3);
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Окно входа в профиль */
+.password-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.98);
+    backdrop-filter: blur(15px);
+    z-index: 1500;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.password-overlay.active {
+    display: flex;
+}
+
+.password-content {
+    text-align: center;
+    padding: 40px 25px;
+    max-width: 400px;
+    width: 100%;
+    background: rgba(30, 30, 40, 0.95);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 60px rgba(255,0,100,0.4);
+}
+
+.password-sushi {
+    font-size: 90px;
+    margin-bottom: 15px;
+    animation: shake 3s ease-in-out infinite;
+}
+
+@keyframes shake {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(5deg); }
+    75% { transform: rotate(-5deg); }
+}
+
+.password-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 25px;
+    text-shadow: 0 0 20px rgba(255,0,100,0.5);
+}
+
+.password-input input {
+    background: rgba(255,255,255,0.95);
+    font-size: 1.2rem;
+    padding: 18px;
+    border-radius: 40px;
+}
+
+/* админ-панель */
+.admin-card {
+    width: 700px;
+    max-width: 100%;
+    text-align: left;
+}
+
+.admin-section {
+    margin: 25px 0;
+    padding: 22px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 30px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.user-list {
+    max-height: 250px;
+    overflow-y: auto;
+    margin: 15px 0;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 25px;
+    padding: 12px;
+    background: rgba(0,0,0,0.2);
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 18px;
+    background: rgba(255,255,255,0.07);
+    margin: 8px 0;
+    border-radius: 20px;
+    font-size: 1rem;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.1s ease;
+}
+
+.user-item:active {
+    transform: scale(0.98);
+    background: rgba(255,0,100,0.2);
+}
+
+.warning {
+    color: #ffaa00;
+    font-weight: bold;
+    font-size: 1rem;
+    background: rgba(255,170,0,0.1);
+    padding: 12px;
+    border-radius: 20px;
+}
+
+hr {
+    border: 1px solid rgba(255,255,255,0.1);
+    margin: 25px 0;
+}
+
+.balance-value {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ffaa00;
+    margin: 15px 0;
+    text-shadow: 0 0 20px rgba(255,170,0,0.5);
+    background: rgba(0,0,0,0.3);
+    padding: 20px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,170,0,0.3);
+}
+
+.balance-sushi {
+    font-size: 2.5rem;
+    display: inline-block;
+    filter: drop-shadow(0 0 10px #ffaa00);
+}
+
+/* ПОЛНОЭКРАННОЕ СООБЩЕНИЕ О ТЕХ РАБОТАХ */
+.maintenance-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #ff6b6b30 0%, #1a0000 70%, #000000 100%);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    animation: fadeIn 0.5s ease;
+    backdrop-filter: blur(10px);
+    padding: 20px;
+}
+
+.maintenance-content {
+    text-align: center;
+    padding: 40px 25px;
+    max-width: 600px;
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border-radius: 60px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,107,107,0.3);
+    box-shadow: 0 0 70px rgba(255,107,107,0.4);
+}
+
+.maintenance-sushi {
+    font-size: 100px;
+    margin-bottom: 25px;
+    animation: floatSushi 3s ease-in-out infinite;
+}
+
+.maintenance-title {
+    font-size: 2.8rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #ff6b6b, #ffd93d, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+
+.maintenance-text {
+    font-size: 1.7rem;
+    color: white;
+    margin-bottom: 35px;
+    line-height: 1.4;
+}
+
+/* ОВЕРЛЕЙ ПОДПИСКИ */
+.subscribe-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.98);
+    backdrop-filter: blur(15px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.subscribe-content {
+    text-align: center;
+    padding: 45px 25px;
+    max-width: 600px;
+    width: 100%;
+    background: rgba(30, 30, 40, 0.95);
+    border-radius: 60px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 70px rgba(255,0,100,0.4);
+}
+
+.subscribe-sushi {
+    font-size: 120px;
+    margin-bottom: 20px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.subscribe-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(255,0,100,0.5);
+}
+
+.subscribe-text {
+    font-size: 1.6rem;
+    color: rgba(255,255,255,0.95);
+    margin-bottom: 30px;
+    line-height: 1.4;
+}
+
+.subscribe-button {
+    width: 100%;
+    padding: 22px 30px;
+    font-size: 1.6rem;
+    background: linear-gradient(135deg, #ff0055, #ff5500);
+    border: none;
+    border-radius: 60px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    margin: 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Адаптация для маленьких экранов */
+@media (max-width: 480px) {
+    .menu {
+        top: 10px;
+        gap: 6px;
+    }
+    
+    .menu button {
+        padding: 12px 16px;
+        font-size: 1.1rem;
+        min-width: 55px;
+    }
+    
+    h2 {
+        font-size: 1.9rem;
+    }
+    
+    .sushi {
+        font-size: 75px;
+    }
+    
+    .balance-value {
+        font-size: 2.5rem;
+        padding: 15px;
+    }
+    
+    .balance-sushi {
+        font-size: 2rem;
+    }
+    
+    .btn {
+        padding: 16px 18px;
+        font-size: 1.1rem;
+    }
+    
+    .subscribe-title {
+        font-size: 2rem;
+    }
+    
+    .subscribe-text {
+        font-size: 1.3rem;
+    }
+    
+    .subscribe-sushi {
+        font-size: 90px;
+    }
+}
+
+@media (max-width: 360px) {
+    .menu button {
+        padding: 10px 12px;
+        font-size: 1rem;
+        min-width: 48px;
+    }
+    
+    h2 {
+        font-size: 1.7rem;
+    }
+    
+    .container {
+        padding-top: 100px;
+    }
+    
+    .card {
+        padding: 25px 18px;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- 🍣 фон -->
+<div class="sushi-bg" id="bg"></div>
+
+<!-- ОВЕРЛЕЙ ПОДПИСКИ -->
+<div class="subscribe-overlay" id="subscribeOverlay">
+    <div class="subscribe-content">
+        <div class="subscribe-sushi">🍣</div>
+        <div class="subscribe-title">ПОДПИШИСЬ НА КАНАЛ</div>
+        <div class="subscribe-text">Чтобы пользоваться сайтом,<br>подпишись на наш канал</div>
+        <button class="subscribe-button" onclick="handleSubscribe()">🔔 ПОДПИСАТЬСЯ</button>
+        <div class="subscribe-note">После подписки нажми кнопку выше</div>
+    </div>
+</div>
+
+<!-- ОВЕРЛЕЙ ВХОДА В ПРОФИЛЬ -->
+<div class="password-overlay" id="passwordOverlay">
+    <div class="password-content">
+        <div class="password-sushi">🔒</div>
+        <div class="password-title">Вход в профиль</div>
+        <div class="password-input">
+            <input type="password" id="profilePasswordInput" placeholder="Введите пароль" autocomplete="off">
+        </div>
+        <button class="btn btn-success" onclick="unlockProfile()">🔓 Войти</button>
+        <button class="btn btn-small" onclick="logoutProfile()">🚪 Выйти из профиля</button>
+        <div class="password-hint" id="passwordHint">Введите пароль, который установили в настройках</div>
+    </div>
+</div>
+
+<!-- ПОЛНОЭКРАННОЕ СООБЩЕНИЕ О ТЕХ РАБОТАХ -->
+<div class="maintenance-overlay" id="maintenanceOverlay">
+    <div class="maintenance-content">
+        <div class="maintenance-sushi">🍣🔧🍣</div>
+        <div class="maintenance-title">ТЕХНИЧЕСКИЕ РАБОТЫ</div>
+        <div class="maintenance-text">Ведутся технические работы.<br>Заходите позже!</div>
+        <div class="maintenance-decoration">
+            <span>🍣</span>
+            <span>⚙️</span>
+            <span>🍣</span>
+            <span>⚙️</span>
+            <span>🍣</span>
+        </div>
+    </div>
+</div>
+
+<!-- бейдж тех. работ (для админа) -->
+<div class="maintenance-badge" id="maintenanceBadge">🔧 РЕЖИМ ТЕХ. РАБОТ</div>
+
+<!-- меню -->
+<div class="menu">
+    <button onclick="show('main')">🍣</button>
+    <button onclick="show('profile')">👤</button>
+    <button onclick="show('pay')">💳</button>
+    <button onclick="show('stats')">📊</button>
+    <button id="adminMenuBtn" onclick="show('admin')" style="display:none;">⚙️</button>
+</div>
+
+<div class="container">
+
+<!-- 🍣 главная -->
+<div id="main" class="card screen active">
+    <div class="sushi">🍣</div>
+    <h2>Sushi Transfer</h2>
+    <input id="user" placeholder="Кому (username)">
+    
+    <!-- УЛУЧШЕННЫЙ ПРОГРЕСС-БАР -->
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-text">
+            <span>🍣 Отправка...</span>
+            <span class="progress-percent" id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <button class="btn" onclick="send()">🍣 Отправить суши</button>
+    <p id="msg"></p>
+</div>
+
+<!-- 👤 профиль -->
+<div id="profile" class="card screen">
+    <h2>Профиль</h2>
+    <div id="nameView">Имя: не указано</div>
+    <div id="usernameView">Юзернейм: @unknown</div>
+    <div id="bioView">Описание: —</div>
+    <div id="passwordStatus">🔒 Пароль: не установлен</div>
+    
+    <hr>
+    <h3>✏️ Редактировать профиль</h3>
+    <input id="newName" placeholder="Новое имя">
+    <input id="newUsername" placeholder="Юзернейм (например @durov)">
+    <textarea id="newBio" placeholder="О себе..."></textarea>
+    
+    <h3>🔐 Защита паролем</h3>
+    <input type="password" id="newPassword" placeholder="Новый пароль" autocomplete="off">
+    <input type="password" id="confirmPassword" placeholder="Подтвердите пароль" autocomplete="off">
+    
+    <button class="btn" onclick="saveProfile()">💾 Сохранить профиль</button>
+    <button class="btn btn-warning" onclick="setPassword()">🔒 Установить пароль</button>
+    <button class="btn btn-danger" onclick="removePassword()">🔓 Снять пароль</button>
+    
+    <p id="profileMessage" style="font-size: 0.95rem; margin-top: 10px;"></p>
+</div>
+
+<!-- 💳 оплата и подписка -->
+<div id="pay" class="card screen">
+    <h2>Баланс</h2>
+    <div class="balance-value" id="balance">0 <span class="balance-sushi">🍣</span></div>
+    <p>Ваш юзернейм: <span id="payUsername">@unknown</span></p>
+    
+    <div class="admin-section" style="margin: 20px 0; background: rgba(255,215,0,0.15);">
+        <h3>📺 Подписка на канал</h3>
+        <p class="subscribe-highlight">+1 🍣 за подписку!</p>
+        <button class="btn btn-small btn-success" onclick="subscribeChannel()" id="subscribeBtn">🔔 Подписаться на канал</button>
+        <p id="subscribeMessage" style="font-size: 0.95rem; margin-top: 10px;"></p>
+    </div>
+    
+    <button class="btn" onclick="openTelegram()">💳 Пополнить через Telegram</button>
+    <p id="payMessage" style="font-size: 0.95rem; margin-top: 10px;"></p>
+</div>
+
+<!-- 📊 статистика -->
+<div id="stats" class="card screen">
+    <h2>Статистика</h2>
+    <p>🍣 отправлено: <span id="count">0</span></p>
+    <p>👥 посетителей: <span id="visitorsCount">0</span></p>
+</div>
+
+<!-- ⚙️ АДМИН-ПАНЕЛЬ -->
+<div id="admin" class="card admin-card screen">
+    <h2>⚙️ Админ-панель</h2>
+    <p class="warning">Доступ только для @lonexs и @trofingood</p>
+    
+    <div class="admin-section">
+        <h3>👥 Все пользователи</h3>
+        <div id="allUsersList" class="user-list"></div>
+        <p>Всего посещений: <span id="adminVisitors">0</span></p>
+        <button class="btn btn-small" onclick="refreshUsersList()">🔄 Обновить список</button>
+    </div>
+
+    <div class="admin-section">
+        <h3>🍣 Выдать суши пользователю</h3>
+        <input id="adminUsername" type="text" placeholder="Введите юзернейм (например @durov)" style="margin-bottom: 10px;">
+        <input id="adminSushiAmount" type="number" placeholder="Количество суши" min="1" value="1">
+        <button class="btn btn-small" onclick="grantSushi()">💰 Выдать суши</button>
+        <p id="grantResult" style="font-size: 0.95rem; margin-top: 10px;"></p>
+    </div>
+
+    <div class="admin-section">
+        <h3>📊 Балансы пользователей</h3>
+        <div id="userBalancesList" class="user-list"></div>
+        <button class="btn btn-small" onclick="refreshBalances()">🔄 Обновить балансы</button>
+    </div>
+
+    <div class="admin-section">
+        <h3>🛠️ Тех. работы</h3>
+        <button class="btn btn-small" onclick="toggleMaintenance()" id="maintenanceBtn">🔧 Включить тех. работы</button>
+        <p id="maintenanceStatus" style="margin-top:10px;">Статус: ✅ сайт работает</p>
+    </div>
+    
+    <div class="admin-section">
+        <h3>📺 Подписки</h3>
+        <p>Уникальных подписчиков: <span id="subscribersCount">0</span></p>
+        <button class="btn btn-small" onclick="refreshSubscribers()">🔄 Обновить</button>
+    </div>
+</div>
+
+</div>
+
+<script>
+// Защита от копирования
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('copy', e => e.preventDefault());
+document.addEventListener('cut', e => e.preventDefault());
+document.addEventListener('paste', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+    if (e.ctrlKey && (e.key === 'c' || e.key === 'x' || e.key === 'v' || e.key === 's' || e.key === 'u')) {
+        e.preventDefault();
+    }
+    if (e.key === 'F12') e.preventDefault();
+});
+
+// ==================== БАЗА ДАННЫХ ====================
+if (!localStorage.getItem('sushiDB')) {
+    const initialDB = {
+        users: {},
+        visitors: 0,
+        totalSent: 0,
+        subscribers: [],
+        maintenance: false
+    };
+    localStorage.setItem('sushiDB', JSON.stringify(initialDB));
+}
+
+function loadDB() {
+    return JSON.parse(localStorage.getItem('sushiDB')) || {
+        users: {},
+        visitors: 0,
+        totalSent: 0,
+        subscribers: [],
+        maintenance: false
+    };
+}
+
+function saveDB(db) {
+    localStorage.setItem('sushiDB', JSON.stringify(db));
+}
+
+let db = loadDB();
+
+// Текущий пользователь
+let currentUser = {
+    name: 'Гость',
+    username: '@unknown',
+    bio: '',
+    password: null
+};
+
+// Флаг заблокирован ли профиль
+let profileLocked = true;
+
+// Загружаем профиль если есть
+let savedProfile = localStorage.getItem('userProfile');
+if (savedProfile) {
+    currentUser = JSON.parse(savedProfile);
+}
+
+// ==================== ПРОВЕРКА ПАРОЛЯ ====================
+function checkProfileLock() {
+    // Если у пользователя есть пароль и мы не админы, показываем окно входа
+    if (currentUser.password && 
+        currentUser.username !== '@lonexs' && 
+        currentUser.username !== '@trofingood' && 
+        profileLocked) {
+        document.getElementById('passwordOverlay').classList.add('active');
+        document.getElementById('profilePasswordInput').value = '';
+        document.getElementById('passwordHint').innerHTML = 'Введите пароль для доступа к профилю';
+    } else {
+        document.getElementById('passwordOverlay').classList.remove('active');
+    }
+}
+
+function unlockProfile() {
+    const inputPassword = document.getElementById('profilePasswordInput').value;
+    
+    if (inputPassword === currentUser.password) {
+        profileLocked = false;
+        document.getElementById('passwordOverlay').classList.remove('active');
+        document.getElementById('profileMessage').innerHTML = '✅ Профиль разблокирован';
+        document.getElementById('profileMessage').style.color = '#55ff55';
+        setTimeout(() => {
+            document.getElementById('profileMessage').innerHTML = '';
+        }, 3000);
+    } else {
+        document.getElementById('passwordHint').innerHTML = '❌ Неверный пароль!';
+        document.getElementById('passwordHint').style.color = '#ff5555';
+    }
+}
+
+function logoutProfile() {
+    profileLocked = true;
+    document.getElementById('passwordOverlay').classList.remove('active');
+    show('main');
+}
+
+// ==================== УСТАНОВКА ПАРОЛЯ ====================
+function setPassword() {
+    const newPass = document.getElementById('newPassword').value;
+    const confirmPass = document.getElementById('confirmPassword').value;
+    const messageEl = document.getElementById('profileMessage');
+    
+    if (!newPass) {
+        messageEl.innerHTML = '❌ Введите пароль';
+        messageEl.style.color = '#ff5555';
+        return;
+    }
+    
+    if (newPass !== confirmPass) {
+        messageEl.innerHTML = '❌ Пароли не совпадают';
+        messageEl.style.color = '#ff5555';
+        return;
+    }
+    
+    currentUser.password = newPass;
+    localStorage.setItem('userProfile', JSON.stringify(currentUser));
+    
+    document.getElementById('passwordStatus').innerHTML = '🔒 Пароль: установлен';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+    
+    messageEl.innerHTML = '✅ Пароль успешно установлен!';
+    messageEl.style.color = '#55ff55';
+    
+    setTimeout(() => {
+        messageEl.innerHTML = '';
+    }, 3000);
+}
+
+function removePassword() {
+    currentUser.password = null;
+    localStorage.setItem('userProfile', JSON.stringify(currentUser));
+    
+    document.getElementById('passwordStatus').innerHTML = '🔒 Пароль: не установлен';
+    document.getElementById('profileMessage').innerHTML = '✅ Пароль снят';
+    document.getElementById('profileMessage').style.color = '#55ff55';
+    
+    setTimeout(() => {
+        document.getElementById('profileMessage').innerHTML = '';
+    }, 3000);
+}
+
+// ==================== ПРОВЕРКА ПОДПИСКИ ====================
+function checkSubscription() {
+    const userIP = getClientIP();
+    db = loadDB();
+    
+    if (db.subscribers.includes(userIP) || currentUser.username === '@lonexs' || currentUser.username === '@trofingood') {
+        document.getElementById('subscribeOverlay').style.display = 'none';
+    } else {
+        document.getElementById('subscribeOverlay').style.display = 'flex';
+    }
+}
+
+// ==================== ОБРАБОТКА ПОДПИСКИ ====================
+function handleSubscribe() {
+    const channelUrl = 'https://t.me/+yaruZFA7deFiY2My';
+    window.open(channelUrl, '_blank');
+    
+    const userIP = getClientIP();
+    db = loadDB();
+    
+    if (!db.subscribers.includes(userIP)) {
+        db.subscribers.push(userIP);
+        
+        if (!db.users[currentUser.username]) {
+            db.users[currentUser.username] = {
+                balance: 1,
+                name: currentUser.name,
+                bio: currentUser.bio
+            };
+        } else {
+            db.users[currentUser.username].balance += 1;
+        }
+        
+        saveDB(db);
+    }
+    
+    document.getElementById('subscribeOverlay').style.display = 'none';
+    
+    updateAllDisplays();
+    refreshSubscribers();
+    
+    document.getElementById('subscribeMessage').innerHTML = '✅ Спасибо за подписку! +1 🍣';
+    document.getElementById('subscribeMessage').style.color = '#55ff55';
+    document.getElementById('subscribeBtn').disabled = true;
+    document.getElementById('subscribeBtn').innerHTML = '✅ Подписано';
+}
+
+// ==================== ПОЛУЧЕНИЕ IP (симуляция) ====================
+function getClientIP() {
+    let ip = localStorage.getItem('clientIP');
+    if (!ip) {
+        ip = 'user_' + Math.random().toString(36).substring(7);
+        localStorage.setItem('clientIP', ip);
+    }
+    return ip;
+}
+
+// ==================== ПОДПИСКА НА КАНАЛ ====================
+function subscribeChannel() {
+    const channelUrl = 'https://t.me/+yaruZFA7deFiY2My';
+    const btn = document.getElementById('subscribeBtn');
+    const messageEl = document.getElementById('subscribeMessage');
+    
+    const userIP = getClientIP();
+    db = loadDB();
+    
+    if (db.subscribers.includes(userIP)) {
+        messageEl.innerHTML = '❌ Вы уже получали бонус за подписку!';
+        messageEl.style.color = '#ff5555';
+        return;
+    }
+    
+    window.open(channelUrl, '_blank');
+    
+    db.subscribers.push(userIP);
+    
+    if (!db.users[currentUser.username]) {
+        db.users[currentUser.username] = {
+            balance: 1,
+            name: currentUser.name,
+            bio: currentUser.bio
+        };
+    } else {
+        db.users[currentUser.username].balance += 1;
+    }
+    
+    saveDB(db);
+    
+    updateAllDisplays();
+    
+    messageEl.innerHTML = '✅ Спасибо за подписку! +1 🍣';
+    messageEl.style.color = '#55ff55';
+    
+    btn.disabled = true;
+    btn.innerHTML = '✅ Подписано';
+}
+
+// Обновить счётчик подписчиков
+function refreshSubscribers() {
+    db = loadDB();
+    document.getElementById('subscribersCount').innerText = db.subscribers.length;
+}
+
+// ==================== УЛУЧШЕННЫЙ ПРОГРЕСС-БАР ====================
+async function simulateProgress() {
+    const container = document.getElementById('progressContainer');
+    const bar = document.getElementById('progressBar');
+    const percentEl = document.getElementById('progressPercent');
+    
+    container.classList.add('active');
+    
+    // Медленная, но заметная анимация
+    const steps = [
+        { percent: 0, delay: 300 },
+        { percent: 15, delay: 400 },
+        { percent: 30, delay: 400 },
+        { percent: 45, delay: 400 },
+        { percent: 60, delay: 400 },
+        { percent: 75, delay: 500 },
+        { percent: 90, delay: 500 },
+        { percent: 98, delay: 600 },
+        { percent: 100, delay: 400 }
+    ];
+    
+    for (let i = 0; i < steps.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, steps[i].delay));
+        bar.style.width = steps[i].percent + '%';
+        percentEl.innerText = steps[i].percent + '%';
+    }
+    
+    // Небольшая пауза перед скрытием
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    container.classList.remove('active');
+    bar.style.width = '0%';
+    percentEl.innerText = '0%';
+}
+
+// ==================== ПРОФИЛЬ ====================
+function updateProfileView() {
+    document.getElementById('nameView').innerHTML = `Имя: ${currentUser.name}`;
+    document.getElementById('usernameView').innerHTML = `Юзернейм: ${currentUser.username}`;
+    document.getElementById('bioView').innerHTML = `Описание: ${currentUser.bio || '—'}`;
+    document.getElementById('payUsername').innerHTML = currentUser.username;
+    document.getElementById('passwordStatus').innerHTML = currentUser.password ? '🔒 Пароль: установлен' : '🔒 Пароль: не установлен';
+}
+
+function setProfileFields() {
+    document.getElementById('newName').value = currentUser.name;
+    document.getElementById('newUsername').value = currentUser.username;
+    document.getElementById('newBio').value = currentUser.bio;
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+}
+
+function saveProfile() {
+    // Проверяем блокировку профиля
+    if (currentUser.password && profileLocked && currentUser.username !== '@lonexs' && currentUser.username !== '@trofingood') {
+        alert('Сначала разблокируйте профиль!');
+        return;
+    }
+    
+    currentUser.name = document.getElementById('newName').value.trim() || 'Гость';
+    currentUser.username = document.getElementById('newUsername').value.trim() || '@unknown';
+    currentUser.bio = document.getElementById('newBio').value.trim();
+    
+    localStorage.setItem('userProfile', JSON.stringify(currentUser));
+    
+    db = loadDB();
+    if (!db.users[currentUser.username]) {
+        db.users[currentUser.username] = {
+            balance: 0,
+            name: currentUser.name,
+            bio: currentUser.bio
+        };
+    } else {
+        db.users[currentUser.username].name = currentUser.name;
+        db.users[currentUser.username].bio = currentUser.bio;
+    }
+    saveDB(db);
+    
+    // Доступ в админку для @lonexs и @trofingood
+    if (currentUser.username === '@lonexs' || currentUser.username === '@trofingood') {
+        document.getElementById('adminMenuBtn').style.display = 'block';
+    } else {
+        document.getElementById('adminMenuBtn').style.display = 'none';
+    }
+    
+    updateProfileView();
+    updateAllDisplays();
+    
+    document.getElementById('profileMessage').innerHTML = '✅ Профиль сохранён!';
+    document.getElementById('profileMessage').style.color = '#55ff55';
+    
+    setTimeout(() => {
+        document.getElementById('profileMessage').innerHTML = '';
+    }, 3000);
+}
+
+// ==================== СЧЕТЧИК ПОСЕТИТЕЛЕЙ ====================
+function countVisitor() {
+    db = loadDB();
+    db.visitors++;
+    saveDB(db);
+    document.getElementById('visitorsCount').innerText = db.visitors;
+    document.getElementById('adminVisitors').innerText = db.visitors;
+}
+
+// ==================== TELEGRAM ====================
+function openTelegram() {
+    const message = `Привет троффи я хочу купить суши можешь скинуть прайс мой юзер нейм ${currentUser.username}, я все понял готов сразу оплачивать`;
+    const encodedMessage = encodeURIComponent(message);
+    const telegramUrl = `https://t.me/trofingood?text=${encodedMessage}`;
+    
+    navigator.clipboard.writeText(message).then(() => {
+        document.getElementById('payMessage').innerHTML = '✅ Сообщение скопировано!';
+        setTimeout(() => {
+            document.getElementById('payMessage').innerHTML = '';
+        }, 3000);
+    }).catch(err => {});
+    
+    window.open(telegramUrl, '_blank');
+}
+
+// ==================== АДМИНКА ====================
+function refreshUsersList() {
+    db = loadDB();
+    const listDiv = document.getElementById('allUsersList');
+    const users = Object.keys(db.users);
+    
+    if (users.length === 0) {
+        listDiv.innerHTML = '<p style="padding:15px;">Пока нет пользователей</p>';
+        return;
+    }
+    
+    let html = '';
+    users.forEach(u => {
+        html += `<div class="user-item"><span>${u}</span></div>`;
+    });
+    listDiv.innerHTML = html;
+}
+
+function refreshBalances() {
+    db = loadDB();
+    const listDiv = document.getElementById('userBalancesList');
+    const users = Object.keys(db.users);
+    
+    if (users.length === 0) {
+        listDiv.innerHTML = '<p style="padding:15px;">Нет данных о балансах</p>';
+        return;
+    }
+    
+    let html = '';
+    users.forEach(u => {
+        const userBalance = db.users[u].balance || 0;
+        html += `<div class="user-item"><span>${u}</span> <span style="color: #ffaa00; font-weight: bold;">${userBalance} 🍣</span></div>`;
+    });
+    listDiv.innerHTML = html;
+}
+
+function grantSushi() {
+    const targetUser = document.getElementById('adminUsername').value.trim();
+    let amount = Number(document.getElementById('adminSushiAmount').value);
+    const resultDiv = document.getElementById('grantResult');
+    
+    if (!targetUser) {
+        resultDiv.innerHTML = '❌ Введите юзернейм';
+        resultDiv.style.color = '#ff5555';
+        return;
+    }
+    
+    if (amount < 1) amount = 1;
+    
+    let formattedUser = targetUser.startsWith('@') ? targetUser : '@' + targetUser;
+    
+    db = loadDB();
+    
+    if (!db.users[formattedUser]) {
+        db.users[formattedUser] = {
+            balance: amount,
+            name: formattedUser,
+            bio: ''
+        };
+    } else {
+        db.users[formattedUser].balance += amount;
+    }
+    
+    saveDB(db);
+    
+    if (formattedUser === currentUser.username) {
+        updateAllDisplays();
+    }
+    
+    resultDiv.innerHTML = `✅ Выдано ${amount} 🍣 пользователю ${formattedUser}`;
+    resultDiv.style.color = '#55ff55';
+    
+    refreshUsersList();
+    refreshBalances();
+    updateAllDisplays();
+    
+    document.getElementById('adminUsername').value = '';
+    document.getElementById('adminSushiAmount').value = '1';
+    
+    setTimeout(() => {
+        resultDiv.innerHTML = '';
+    }, 3000);
+}
+
+// ==================== ОБНОВЛЕНИЕ ВСЕХ ДИСПЛЕЕВ ====================
+function updateAllDisplays() {
+    db = loadDB();
+    
+    if (db.users[currentUser.username]) {
+        document.getElementById('balance').innerHTML = db.users[currentUser.username].balance + ' <span class="balance-sushi">🍣</span>';
+    } else {
+        document.getElementById('balance').innerHTML = '0 <span class="balance-sushi">🍣</span>';
+    }
+    
+    document.getElementById('count').innerHTML = db.totalSent || 0;
+    document.getElementById('visitorsCount').innerHTML = db.visitors || 0;
+    document.getElementById('adminVisitors').innerHTML = db.visitors || 0;
+    document.getElementById('subscribersCount').innerHTML = db.subscribers.length || 0;
+}
+
+// ==================== ТЕХ. РАБОТЫ ====================
+function toggleMaintenance() {
+    db = loadDB();
+    db.maintenance = !db.maintenance;
+    saveDB(db);
+    
+    const btn = document.getElementById('maintenanceBtn');
+    const status = document.getElementById('maintenanceStatus');
+    const overlay = document.getElementById('maintenanceOverlay');
+    const badge = document.getElementById('maintenanceBadge');
+    
+    if (db.maintenance) {
+        btn.innerHTML = '🔧 Выключить тех. работы';
+        status.innerHTML = 'Статус: 🔴 Сайт на тех. обслуживании';
+        
+        if (currentUser.username === '@lonexs' || currentUser.username === '@trofingood') {
+            badge.classList.add('active');
+            overlay.classList.remove('active');
+        } else {
+            overlay.classList.add('active');
+            badge.classList.remove('active');
+        }
+    } else {
+        btn.innerHTML = '🔧 Включить тех. работы';
+        status.innerHTML = 'Статус: ✅ сайт работает';
+        overlay.classList.remove('active');
+        badge.classList.remove('active');
+    }
+}
+
+function applyMaintenance() {
+    db = loadDB();
+    const overlay = document.getElementById('maintenanceOverlay');
+    const badge = document.getElementById('maintenanceBadge');
+    
+    if (db.maintenance) {
+        document.getElementById('maintenanceBtn').innerHTML = '🔧 Выключить тех. работы';
+        document.getElementById('maintenanceStatus').innerHTML = 'Статус: 🔴 Сайт на тех. обслуживании';
+        
+        if (currentUser.username === '@lonexs' || currentUser.username === '@trofingood') {
+            badge.classList.add('active');
+            overlay.classList.remove('active');
+        } else {
+            overlay.classList.add('active');
+            badge.classList.remove('active');
+        }
+    } else {
+        document.getElementById('maintenanceBtn').innerHTML = '🔧 Включить тех. работы';
+        document.getElementById('maintenanceStatus').innerHTML = 'Статус: ✅ сайт работает';
+        overlay.classList.remove('active');
+        badge.classList.remove('active');
+    }
+}
+
+// ==================== ОСНОВНЫЕ ФУНКЦИИ ====================
+function show(id) {
+    db = loadDB();
+    
+    // Проверяем техработы
+    if (db.maintenance && currentUser.username !== '@lonexs' && currentUser.username !== '@trofingood') {
+        document.getElementById('maintenanceOverlay').classList.add('active');
+        return;
+    }
+    
+    // Проверяем подписку
+    const userIP = getClientIP();
+    if (!db.subscribers.includes(userIP) && currentUser.username !== '@lonexs' && currentUser.username !== '@trofingood') {
+        document.getElementById('subscribeOverlay').style.display = 'flex';
+        return;
+    }
+    
+    // Если открываем профиль, проверяем блокировку
+    if (id === 'profile') {
+        checkProfileLock();
+    }
+    
+    document.querySelectorAll('.screen').forEach(e => e.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+async function send() {
+    db = loadDB();
+    
+    // Проверяем подписку
+    const userIP = getClientIP();
+    if (!db.subscribers.includes(userIP) && currentUser.username !== '@lonexs' && currentUser.username !== '@trofingood') {
+        document.getElementById('subscribeOverlay').style.display = 'flex';
+        return;
+    }
+    
+    if (db.maintenance && currentUser.username !== '@lonexs' && currentUser.username !== '@trofingood') {
+        alert('Технические работы');
+        return;
+    }
+    
+    let u = document.getElementById('user').value;
+    let msg = document.getElementById('msg');
+
+    if(!u) { msg.innerHTML="❌ Введите username"; return; }
+    
+    if (!db.users[currentUser.username] || db.users[currentUser.username].balance <= 0) {
+        msg.innerHTML = "❌ Недостаточно суши-баланса";
+        return;
+    }
+
+    // Запускаем улучшенный прогресс-бар (медленная анимация)
+    await simulateProgress();
+
+    db.users[currentUser.username].balance--;
+    db.totalSent = (db.totalSent || 0) + 1;
+    
+    saveDB(db);
+
+    updateAllDisplays();
+
+    msg.innerHTML = `✅ Отправлено ${u} 🍣`;
+    document.getElementById('user').value = '';
+    
+    setTimeout(() => {
+        msg.innerHTML = '';
+    }, 3000);
+}
+
+// ==================== ИНИЦИАЛИЗАЦИЯ ====================
+window.onload = function() {
+    // Фон с суши
+    const bg = document.getElementById("bg");
+    for(let i = 0; i < 30; i++) {
+        let s = document.createElement("span");
+        s.innerHTML = "🍣";
+        s.style.left = Math.random() * 100 + "%";
+        s.style.animationDuration = (8 + Math.random() * 15) + "s";
+        s.style.fontSize = (15 + Math.random() * 30) + "px";
+        bg.appendChild(s);
+    }
+    
+    db = loadDB();
+    
+    // Убедимся что техработы выключены
+    db.maintenance = false;
+    saveDB(db);
+    
+    if (currentUser.username !== '@unknown' && !db.users[currentUser.username]) {
+        db.users[currentUser.username] = {
+            balance: 0,
+            name: currentUser.name,
+            bio: currentUser.bio
+        };
+        saveDB(db);
+    }
+    
+    updateProfileView();
+    setProfileFields();
+    
+    // Доступ в админку для @lonexs и @trofingood
+    if (currentUser.username === '@lonexs' || currentUser.username === '@trofingood') {
+        document.getElementById('adminMenuBtn').style.display = 'block';
+    }
+    
+    updateAllDisplays();
+    
+    countVisitor();
+    refreshUsersList();
+    refreshBalances();
+    applyMaintenance();
+    
+    // Проверяем подписку
+    checkSubscription();
+    
+    const userIP = getClientIP();
+    if (db.subscribers.includes(userIP)) {
+        document.getElementById('subscribeBtn').disabled = true;
+        document.getElementById('subscribeBtn').innerHTML = '✅ Подписано';
+    }
+};
+
+setInterval(() => {
+    updateAllDisplays();
+}, 2000);
+</script>
+
+</body>
+</html>
